@@ -3,40 +3,6 @@
     {
       "boot_wait": "6m",
       "communicator": "winrm",
-      "cpus": "2",
-      "disk_size": "{{user `disk_size`}}",
-      "floppy_files": [
-        "{{user `autounattend`}}",
-        "./floppy/WindowsPowershell.lnk",
-        "./floppy/PinTo10.exe",
-        "./scripts/fixnetwork.ps1",
-        "./scripts/disable-screensaver.ps1",
-        "./scripts/disable-winrm.ps1",
-        "./scripts/enable-winrm.ps1",
-        "./scripts/microsoft-updates.bat",
-        "./scripts/win-updates.ps1"
-      ],
-      "headless": true,
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
-      "iso_url": "{{user `iso_url`}}",
-      "memory": "2048",
-      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
-      "type": "qemu",
-      "accelerator": "kvm",
-      "output_directory": "windows_10-qemu",
-      "qemuargs": [
-        [ "-drive", "file=windows_10-qemu/{{ .Name }},if=virtio,cache=writeback,discard=ignore,format=qcow2,index=1" ],
-        [ "-drive", "file={{ user `virtio_win_iso` }},media=cdrom,index=3" ]
-      ],
-      "vm_name": "windows_10",
-      "winrm_password": "vagrant",
-      "winrm_timeout": "{{user `winrm_timeout`}}",
-      "winrm_username": "vagrant"
-    },
-    {
-      "boot_wait": "6m",
-      "communicator": "winrm",
       "configuration_version": "8.0",
       "cpus": "2",
       "disk_size": "{{user `disk_size`}}",
@@ -48,7 +14,6 @@
         "./scripts/disable-screensaver.ps1",
         "./scripts/disable-winrm.ps1",
         "./scripts/enable-winrm.ps1",
-        "./scripts/microsoft-updates.bat",
         "./scripts/win-updates.ps1"
       ],
       "guest_additions_mode": "none",
@@ -69,46 +34,6 @@
       "boot_wait": "6m",
       "communicator": "winrm",
       "cpus": 2,
-      "disk_adapter_type": "lsisas1068",
-      "disk_size": "{{user `disk_size`}}",
-      "disk_type_id": "{{user `disk_type_id`}}",
-      "floppy_files": [
-        "{{user `autounattend`}}",
-        "./floppy/WindowsPowershell.lnk",
-        "./floppy/PinTo10.exe",
-        "./scripts/fixnetwork.ps1",
-        "./scripts/disable-screensaver.ps1",
-        "./scripts/disable-winrm.ps1",
-        "./scripts/enable-winrm.ps1",
-        "./scripts/microsoft-updates.bat",
-        "./scripts/win-updates.ps1"
-      ],
-      "guest_os_type": "windows9-64",
-      "headless": "{{user `headless`}}",
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
-      "iso_url": "{{user `iso_url`}}",
-      "memory": 2048,
-      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
-      "type": "vmware-iso",
-      "version": 14,
-      "vm_name": "windows_10",
-      "vmx_data": {
-        "RemoteDisplay.vnc.enabled": "false",
-        "RemoteDisplay.vnc.port": "5900"
-      },
-      "vmx_remove_ethernet_interfaces": true,
-      "vnc_port_max": 5980,
-      "vnc_port_min": 5900,
-      "winrm_password": "vagrant",
-      "winrm_timeout": "{{user `winrm_timeout`}}",
-      "winrm_username": "vagrant"
-    },
-    {
-      "boot_command": "",
-      "boot_wait": "6m",
-      "communicator": "winrm",
-      "cpus": 2,
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
         "{{user `autounattend`}}",
@@ -118,8 +43,8 @@
         "./scripts/disable-screensaver.ps1",
         "./scripts/disable-winrm.ps1",
         "./scripts/enable-winrm.ps1",
-        "./scripts/microsoft-updates.bat",
         "./scripts/win-updates.ps1"
+
       ],
       "guest_additions_mode": "disable",
       "guest_os_type": "Windows10_64",
@@ -134,15 +59,7 @@
       "winrm_password": "vagrant",
       "winrm_timeout": "{{user `winrm_timeout`}}",
       "winrm_username": "vagrant"
-    }
-  ],
-  "post-processors": [
-    {
-      "keep_input_artifact": false,
-      "output": "windows_10_{{.Provider}}.box",
-      "type": "vagrant",
-      "vagrantfile_template": "vagrantfile-windows_10.template"
-    }
+     }
   ],
   "provisioners": [
     {
@@ -179,8 +96,7 @@
         "./scripts/compile-dotnet-assemblies.bat",
         "./scripts/set-winrm-automatic.bat",
         "./scripts/uac-enable.bat",
-        "./scripts/dis-updates.bat",
-        "./scripts/compact.bat"
+        "./scripts/dis-updates.bat"
       ],
       "type": "windows-shell"
     }
@@ -189,14 +105,13 @@
     "autounattend": "./answer_files/10/Autounattend.xml",
     "disk_size": "61440",
     "disk_type_id": "1",
-    "headless": "false",
-    "iso_checksum": "9ef81b6a101afd57b2dbfa44d5c8f7bc94ff45b51b82c5a1f9267ce2e63e9f53",
+    "headless": "true",
+    "iso_checksum": "01bf1eb643f7e50d0438f4f74fb91468d35cde2c82b07abc1390d47fc6a356be",
     "iso_checksum_type": "sha256",
-    "iso_url": "https://software-download.microsoft.com/download/pr/18363.418.191007-0143.19h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso",
+    "iso_url": "./iso/Win10_1909_English_x64.iso",
     "restart_timeout": "5m",
     "vhv_enable": "false",
     "winrm_timeout": "6h",
     "virtio_win_iso": "~/virtio-win.iso"
   }
 }
-
