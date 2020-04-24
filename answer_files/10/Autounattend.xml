@@ -85,10 +85,8 @@
                 <AcceptEula>true</AcceptEula>
                 <FullName>Vagrant</FullName>
                 <Organization>Vagrant</Organization>
-
                 <!--
-                    NOTE: If you are re-configuring this for use of a retail key
-                    and using a retail ISO, you need to adjust the <ProductKey> block
+                    NOTE: If you are using a retail ISO, you need to adjust the <ProductKey> block
                     below to look like this:
 
                     <ProductKey>
@@ -97,10 +95,16 @@
                     </ProductKey>
 
                     Notice the addition of the `<Key>` element.
-                -->
 
-                <!-- Product Key from https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise -->
-                <ProductKey>2FMYP-QCY43-QR9VK-WTVCK
+                    If using an evaluation ISO e.g.
+                    Product Key from https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise
+
+                    <ProductKey>2FMYP-QCY43-QR9VK-WTVCK
+                        <WillShowUI>Never</WillShowUI>
+                    </ProductKey>
+                -->
+                <ProductKey>
+                    <Key>W269N-WFGWX-YVC9B-4J6C9-T83GX</Key>
                     <WillShowUI>Never</WillShowUI>
                 </ProductKey>
             </UserData>
@@ -253,33 +257,31 @@
                     <Order>14</Order>
                     <Description>Enable AutoLogon</Description>
                 </SynchronousCommand>
-                <!-- WITHOUT WINDOWS UPDATES -->
-                <!--
-                <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\enable-winrm.ps1</CommandLine>
-                    <Description>Enable WinRM</Description>
-                    <Order>99</Order>
-                </SynchronousCommand>
-                -->
-                <!-- END WITHOUT WINDOWS UPDATES -->
-                <!-- WITH WINDOWS UPDATES -->
-                <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c a:\microsoft-updates.bat</CommandLine>
-                    <Order>98</Order>
-                    <Description>Enable Microsoft Updates</Description>
-                </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\disable-screensaver.ps1</CommandLine>
                     <Description>Disable Screensaver</Description>
                     <Order>99</Order>
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
+                <!-- WITHOUT WINDOWS UPDATES -->
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\enable-winrm.ps1</CommandLine>
+                    <Description>Enable WinRM</Description>
+                    <Order>99</Order>
+                </SynchronousCommand>
+                <!-- END WITHOUT WINDOWS UPDATES -->
+                <!-- WITH WINDOWS UPDATES -->
+<!--                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c a:\microsoft-updates.bat</CommandLine>
+                    <Order>98</Order>
+                    <Description>Enable Microsoft Updates</Description>
+                </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\win-updates.ps1</CommandLine>
                     <Description>Install Windows Updates</Description>
                     <Order>100</Order>
                     <RequiresUserInput>true</RequiresUserInput>
-                </SynchronousCommand>
+                </SynchronousCommand>-->
                 <!-- END WITH WINDOWS UPDATES -->
             </FirstLogonCommands>
             <ShowWindowsLive>false</ShowWindowsLive>

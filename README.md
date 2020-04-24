@@ -28,22 +28,10 @@ The following Windows versions are known to work (built with VMware Fusion Pro
 
 * Windows 10
   * Windows 10 1809 -> Vagrant Cloud box [StefanScherer/windows_10](https://app.vagrantup.com/StefanScherer/boxes/windows_10)
-  * Windows 10 Insider
-* Windows Server 2016 Desktop -> Vagrant Cloud box [StefanScherer/windows_2016](https://app.vagrantup.com/StefanScherer/boxes/windows_2016)
-* Windows Server 2019 Desktop -> Vagrant Cloud box [StefanScherer/windows_2019](https://app.vagrantup.com/StefanScherer/boxes/windows_2019)
-* Windows Server Core
-  * Windows Server 2016 without and with Docker -> Vagrant Cloud box [StefanScherer/windows_2016_docker](https://app.vagrantup.com/StefanScherer/boxes/windows_2016_docker)
-  * Windows Server 2019 without and with Docker -> Vagrant Cloud box [StefanScherer/windows_2019_docker](https://app.vagrantup.com/StefanScherer/boxes/windows_2019_docker)
-  * Windows Server 1709, 1803, 1809, 1903, and 1909 all without and with Docker
-  * Windows Server InsiderPreview Semi-Annual without and with Docker
-
-You may find other packer template files, but older versions of Windows doesn't
-work so nice with a Retina display.
 
 ### Windows Editions
 
-All Windows Server versions are defaulted to the Server Standard edition. You
-can modify this by editing the Autounattend.xml file, changing the
+You can modify the version by editing the Autounattend.xml file, changing the
 `ImageInstall`>`OSImage`>`InstallFrom`>`MetaData`>`Value` element (e.g. to
 Windows Server 2012 R2 SERVERDATACENTER).
 
