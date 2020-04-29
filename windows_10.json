@@ -11,7 +11,6 @@
         "./floppy/WindowsPowershell.lnk",
         "./floppy/PinTo10.exe",
         "./scripts/fixnetwork.ps1",
-        "./scripts/disable-screensaver.ps1",
         "./scripts/disable-winrm.ps1",
         "./scripts/enable-winrm.ps1",
         "./scripts/win-updates.ps1"
@@ -30,82 +29,73 @@
       "winrm_username": "vagrant"
     },
     {
-      "boot_command": "",
+      "boot_command": [
+        ""
+      ],
       "boot_wait": "6m",
       "communicator": "winrm",
       "cpus": 2,
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
         "{{user `autounattend`}}",
-        "./floppy/WindowsPowershell.lnk",
-        "./floppy/PinTo10.exe",
-        "./scripts/fixnetwork.ps1",
-        "./scripts/disable-screensaver.ps1",
-        "./scripts/disable-winrm.ps1",
-        "./scripts/enable-winrm.ps1",
-        "./scripts/win-updates.ps1"
-
+        "./scripts/base_setup.ps1"
       ],
-      "guest_additions_mode": "disable",
+      "guest_additions_mode": "attach",
+      "guest_additions_url": "./downloaded_software/VBoxGuestAdditions_6.1.6.iso",
+      "guest_additions_sha256": "bcde4691dea7de93b65a10a43dda2b8f52e570f820992ad281c9bb5c8dede181",
       "guest_os_type": "Windows10_64",
       "headless": "{{user `headless`}}",
       "iso_checksum": "{{user `iso_checksum`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "iso_url": "{{user `iso_url`}}",
+      "http_directory": "./downloaded_software/",
+      "http_port_min": 9000,
+      "http_port_max": 9000,
       "memory": 2048,
       "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
       "type": "virtualbox-iso",
+      "skip_export": "false",
       "vm_name": "windows_10",
       "winrm_password": "vagrant",
       "winrm_timeout": "{{user `winrm_timeout`}}",
       "winrm_username": "vagrant"
-     }
+    }
   ],
   "provisioners": [
     {
-      "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
-      "remote_path": "/tmp/script.bat",
+      "environment_vars": [
+        "install_vbox_tools={{user `install_vbox_tools`}}"
+      ],
       "scripts": [
-        "./scripts/vm-guest-tools.bat",
-        "./scripts/enable-rdp.bat"
+        "./scripts/vm-guest-tools.bat"
       ],
       "type": "windows-shell"
     },
     {
       "scripts": [
-        "./scripts/debloat-windows.ps1"
+        "./scripts/base_provision.ps1"
       ],
       "type": "powershell"
     },
     {
       "restart_timeout": "{{user `restart_timeout`}}",
       "type": "windows-restart"
-    },
-    {
-      "scripts": [
-        "./scripts/set-powerplan.ps1",
-        "./scripts/docker/disable-windows-defender.ps1"
-      ],
-      "type": "powershell"
-    },
-    {
-      "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
-      "remote_path": "/tmp/script.bat",
-      "scripts": [
-        "./scripts/pin-powershell.bat",
-        "./scripts/compile-dotnet-assemblies.bat",
-        "./scripts/set-winrm-automatic.bat",
-        "./scripts/uac-enable.bat",
-        "./scripts/dis-updates.bat"
-      ],
-      "type": "windows-shell"
     }
   ],
-  "variables": {
+  "post-processors": [
+    {
+      "keep_input_artifact": true,
+      "output": "windows_10_{{.Provider}}.box",
+      "type": "vagrant",
+      "vagrantfile_template": "vagrantfile-windows_10.template"
+    }
+  ],
+    "variables": {
     "autounattend": "./answer_files/10/Autounattend.xml",
     "disk_size": "61440",
     "disk_type_id": "1",
-    "headless": "true",
+    "headless": "false",
+    "install_vbox_tools": "true",
     "iso_checksum": "01bf1eb643f7e50d0438f4f74fb91468d35cde2c82b07abc1390d47fc6a356be",
     "iso_checksum_type": "sha256",
     "iso_url": "./iso/Win10_1909_English_x64.iso",

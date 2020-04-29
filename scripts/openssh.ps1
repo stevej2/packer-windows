@@ -9,7 +9,7 @@ $is_64bit = [IntPtr]::size -eq 8
 $ssh_download_url = "https://www.mls-software.com/files/setupssh-7.1p1-1.exe"
 
 if (!(Test-Path "C:\Program Files\OpenSSH\bin\ssh.exe")) {
-    Write-Output "Downloading $ssh_download_url"
+    Write-Output "Installing SSH"
     (New-Object System.Net.WebClient).DownloadFile($ssh_download_url, "C:\Windows\Temp\openssh.exe")
 
     # initially set the port to 2222 so that there is not a race

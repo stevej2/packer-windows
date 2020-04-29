@@ -1,15 +1,12 @@
-if not exist "C:\Windows\Temp\7z1900-x64.msi" (
-    powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://www.7-zip.org/a/7z1900-x64.msi', 'C:\Windows\Temp\7z1900-x64.msi')" <NUL
-)
-if not exist "C:\Windows\Temp\7z1900-x64.msi" (
-    powershell -Command "Start-Sleep 5 ; (New-Object System.Net.WebClient).DownloadFile('https://www.7-zip.org/a/7z1900-x64.msi', 'C:\Windows\Temp\7z1900-x64.msi')" <NUL
-)
-msiexec /qb /i C:\Windows\Temp\7z1900-x64.msi
+
+msiexec /qb /i C:\Windows\Temp\7zip.msi
+
+echo "%install_vbox_tools%"
 
 if "%PACKER_BUILDER_TYPE%" equ "vmware-iso" goto :vmware
 if "%PACKER_BUILDER_TYPE%" equ "virtualbox-iso" goto :virtualbox
-if "%PACKER_BUILDER_TYPE%" equ "parallels-iso" goto :parallels
-if "%PACKER_BUILDER_TYPE%" equ "qemu" goto :qemu
+
+
 goto :done
 
 :vmware
@@ -36,32 +33,18 @@ goto :done
 :virtualbox
 
 if exist "C:\Users\vagrant\VBoxGuestAdditions.iso" (
+echo "Found addiition ....."
     move /Y C:\Users\vagrant\VBoxGuestAdditions.iso C:\Windows\Temp
 )
 
-if not exist "C:\Windows\Temp\VBoxGuestAdditions.iso" (
-    powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (New-Object System.Net.WebClient).DownloadFile('https://download.virtualbox.org/virtualbox/6.1.4/VBoxGuestAdditions_6.1.4.iso', 'C:\Windows\Temp\VBoxGuestAdditions.iso')" <NUL
-)
+REM cmd /c ""C:\Program Files\7-Zip\7z.exe" x C:\Windows\Temp\VBoxGuestAdditions.iso -oC:\Windows\Temp\virtualbox"
+REM cmd /c ""C:\Program Files\7-Zip\7z.exe" x D:\VBoxGuestAdditions.iso -oC:\Windows\Temp\virtualbox"
+REM cmd /c for %%i in (C:\Windows\Temp\virtualbox\cert\vbox*.cer) do C:\Windows\Temp\virtualbox\cert\VBoxCertUtil add-trusted-publisher %%i --root %%i
+cmd /c for %%i in (E:\cert\vbox*.cer) do E:\cert\VBoxCertUtil add-trusted-publisher %%i --root %%i
+cmd /c E:\VBoxWindowsAdditions.exe /S
+rem rd /S /Q "C:\Windows\Temp\virtualbox"
 
-cmd /c ""C:\Program Files\7-Zip\7z.exe" x C:\Windows\Temp\VBoxGuestAdditions.iso -oC:\Windows\Temp\virtualbox"
-cmd /c for %%i in (C:\Windows\Temp\virtualbox\cert\vbox*.cer) do C:\Windows\Temp\virtualbox\cert\VBoxCertUtil add-trusted-publisher %%i --root %%i
-cmd /c C:\Windows\Temp\virtualbox\VBoxWindowsAdditions.exe /S
-rd /S /Q "C:\Windows\Temp\virtualbox"
 goto :done
 
-:parallels
-if exist "C:\Users\vagrant\prl-tools-win.iso" (
-	move /Y C:\Users\vagrant\prl-tools-win.iso C:\Windows\Temp
-	cmd /C "C:\Program Files\7-Zip\7z.exe" x C:\Windows\Temp\prl-tools-win.iso -oC:\Windows\Temp\parallels
-	cmd /C C:\Windows\Temp\parallels\PTAgent.exe /install_silent
-	rd /S /Q "C:\Windows\Temp\parallels"
-)
-goto :done
-
-:qemu
-if exist "E:\guest-agent\" (
-    msiexec /qb /x E:\guest-agent\qemu-ga-x86_64.msi
-)
 
 :done
-msiexec /qb /x C:\Windows\Temp\7z1900-x64.msi
