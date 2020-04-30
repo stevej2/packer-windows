@@ -1,1 +1,1 @@
-#Write-Host "Provisioning script"
+Write-Host "Provisioning script"

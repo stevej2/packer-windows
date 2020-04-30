@@ -84,9 +84,10 @@ Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\WindowsU
 Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\WindowsUpdate\AU" "ScheduledInstallDay" 0
 Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\WindowsUpdate\AU" "ScheduledInstallTime" 3
 
-Write-Host "Disable seeding of updates to other computers via Group Policies"
+# done in decrapifier
+<#Write-Host "Disable seeding of updates to other computers via Group Policies"
 force_mkdir 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization'
-Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" "DODownloadMode" 0
+Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" "DODownloadMode" 0#>
 
 #echo "Disabling automatic driver update"
 #sp "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\DriverSearching" "SearchOrderConfig" 0

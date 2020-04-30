@@ -1,12 +1,3 @@
-<#Write-Host "Uninstalling Chef..."
-$app = Get-WmiObject -Class Win32_Product | Where-Object {
-    $_.Name -match "Chef"
-}
-$app.Uninstall()
-
-Write-Host "Removing leftover Chef files..."
-Remove-Item "C:\Opscode\" -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item "C:\Chef\" -Recurse -Force -ErrorAction SilentlyContinue#>
 
 Write-Host "Cleaning Temp Files..."
 try {

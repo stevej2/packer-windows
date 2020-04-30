@@ -73,7 +73,10 @@
     },
     {
       "scripts": [
-        "./scripts/base_provision.ps1"
+        "./scripts/base_provision.ps1",
+        "./scripts/openssh.ps1",
+        "./scripts/decrapifier.ps1",
+        "./scripts/cleanup.ps1"
       ],
       "type": "powershell"
     },
