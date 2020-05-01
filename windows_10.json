@@ -26,19 +26,28 @@
       "vm_name": "windows_10",
       "winrm_password": "vagrant",
       "winrm_timeout": "{{user `winrm_timeout`}}",
-      "winrm_username": "vagrant"
+      "winrm_username": "vagrant",
+      "vboxmanage_post": [
+        [ "modifyvm", "{{.Name}}", "--graphicscontroller", "vboxsvga" ],
+        [ "modifyvm", "{{.Name}}", "--vram", "128" ],
+        [ "modifyvm", "{{.Name}}", "--clipboard-mode", "bidirectional" ],
+        [ "modifyvm", "{{.Name}}", "--nic1", "bridged" ],
+        [ "modifyvm", "{{.Name}}", "--nested-hw-virt", "on" ],
+        [ "modifyvm", "{{.Name}}", "--nestedpaging", "on" ],
+        [ "modifyvm", "{{.Name}}", "--largepages", "on" ],
+        [ "modifyvm", "{{.Name}}", "--vtxvpid", "on" ]
+      ]
     },
     {
-      "boot_command": [
-        ""
-      ],
       "boot_wait": "6m",
       "communicator": "winrm",
       "cpus": 2,
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
         "{{user `autounattend`}}",
-        "./scripts/base_setup.ps1"
+        "./scripts/base_setup.ps1",
+        "./scripts/fix-network.ps1",
+        "./scripts/enable-winrm.ps1"
       ],
       "guest_additions_mode": "attach",
       "guest_additions_url": "./downloaded_software/VBoxGuestAdditions_6.1.6.iso",
@@ -52,13 +61,23 @@
       "http_port_min": 9000,
       "http_port_max": 9000,
       "memory": 2048,
-      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
       "type": "virtualbox-iso",
       "skip_export": "false",
       "vm_name": "windows_10",
       "winrm_password": "vagrant",
       "winrm_timeout": "{{user `winrm_timeout`}}",
-      "winrm_username": "vagrant"
+      "winrm_username": "vagrant",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "vboxmanage_post": [
+        [ "modifyvm", "{{.Name}}", "--graphicscontroller", "vboxsvga" ],
+        [ "modifyvm", "{{.Name}}", "--vram", "128" ],
+        [ "modifyvm", "{{.Name}}", "--clipboard-mode", "bidirectional" ],
+        [ "modifyvm", "{{.Name}}", "--nic1", "bridged" ],
+        [ "modifyvm", "{{.Name}}", "--nested-hw-virt", "on" ],
+        [ "modifyvm", "{{.Name}}", "--nestedpaging", "on" ],
+        [ "modifyvm", "{{.Name}}", "--largepages", "on" ],
+        [ "modifyvm", "{{.Name}}", "--vtxvpid", "on" ]
+      ]
     }
   ],
   "provisioners": [
@@ -74,8 +93,10 @@
     {
       "scripts": [
         "./scripts/base_provision.ps1",
-        "./scripts/openssh.ps1",
+        "./scripts/add-remove-windows-features.ps1",
+        "./scripts/remove-onedrive.ps1",
         "./scripts/decrapifier.ps1",
+        "./scripts/openssh.ps1",
         "./scripts/cleanup.ps1"
       ],
       "type": "powershell"

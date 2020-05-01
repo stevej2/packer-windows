@@ -16,51 +16,6 @@ Set-ItemProperty "HKCU:\Control Panel\Desktop" -Name ScreenSaveActive -Value 0 -
 & powercfg -x -monitor-timeout-ac 0
 & powercfg -x -monitor-timeout-dc 0
 
-Write-Host "Fixing Network"
-# You cannot enable Windows PowerShell Remoting on network connections that are set to Public
-# Spin through all the network locations and if they are set to Public, set them to Private
-# using the INetwork interface:
-# http://msdn.microsoft.com/en-us/library/windows/desktop/aa370750(v=vs.85).aspx
-# For more info, see:
-# http://blogs.msdn.com/b/powershell/archive/2009/04/03/setting-network-location-to-private.aspx
-
-# Network location feature was only introduced in Windows Vista - no need to bother with this
-# if the operating system is older than Vista
-if([environment]::OSVersion.version.Major -lt 6) { return }
-
-# You cannot change the network location if you are joined to a domain, so abort
-if(1,3,4,5 -contains (Get-WmiObject win32_computersystem).DomainRole) { return }
-
-# Get network connections
-$networkListManager = [Activator]::CreateInstance([Type]::GetTypeFromCLSID([Guid]"{DCB00C01-570F-4A9B-8D69-199FDBA5723B}"))
-$connections = $networkListManager.GetNetworkConnections()
-
-$connections |ForEach-Object {
-    $Category = $_.GetNetwork().GetCategory()
-    if($Category -eq "1"){
-        Write-Host $_.GetNetwork().GetName()"category was previously set to 1"
-    } else {
-        $_.GetNetwork().SetCategory(1)
-        Write-Host $_.GetNetwork().GetName()"changed to category"$_.GetNetwork().GetCategory()
-    }
-}
-
-Write-Host "Enabling WinRM"
-Enable-PSRemoting -Force
-winrm quickconfig -q
-winrm quickconfig -transport:http
-winrm set winrm/config '@{MaxTimeoutms="1800000"}'
-winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="800"}'
-winrm set winrm/config/service '@{AllowUnencrypted="true"}'
-winrm set winrm/config/service/auth '@{Basic="true"}'
-winrm set winrm/config/client/auth '@{Basic="true"}'
-winrm set winrm/config/listener?Address=*+Transport=HTTP '@{Port="5985"}'
-Write-Host "set"
-netsh advfirewall firewall set rule group="Windows Remote Administration" new enable=yes
-netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" new enable=yes action=allow
-Write-Host "advfirewall"
-Set-Service winrm -startuptype "auto"
-Restart-Service winrm
 
 Write-Host "Enabling RDP"
 Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -value 0

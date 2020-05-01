@@ -53,7 +53,6 @@
 #-LeaveServices Leaves services alone.
 #-AppAccess		By default this script will restrict almost all the permissions in Settings -> Privacy. This will prevent that from happening.
 #-ClearStart    Empties the start menu completely leaving you with just the apps list.
-#-OneDrive		Leaves OneDrive and Onedrive for Business fully functional.
 #-Tablet		Use this for tablets or 2-in-1s to leave location and sensors enabled.
 #-Cortana		Leave Cortana and web enabled search intact... if that's what you really want.
 #-NoLog			Don't copy transcript to systemdrive\WindowsDCtranscript.txt.
@@ -66,7 +65,6 @@ param (
     [switch]$LeaveTasks,
     [switch]$LeaveServices,
     [switch]$AppAccess,
-    [switch]$OneDrive,
     [switch]$Tablet,
     [switch]$Cortana,
     [switch]$ClearStart,
@@ -82,7 +80,7 @@ param (
 #Apps to keep. Wildcard is implied so try to be specific enough to not overlap with apps you do want removed.
 #Make sure not begin or end with a "|". ex: "app|app2" - good. "|app|app2|" - bad.
 
-$GoodApps =	"calculator|sticky|store|windows.photos|soundrecorder|mspaint|screensketch"
+$GoodApps =	"calculator|windows.photos|mspaint|screensketch"
 
 #Start Menu XML. If you run the script without -ClearStart, the XML below will be used for a custom start layout. By default it just leaves File Explorer, classic Control Panel, and Snipping Tool tiles.
 #Place your XML like so:
@@ -186,7 +184,7 @@ Function DisableServices {
         "WbioSrvc"                                 # Windows Biometric Service
         "WlanSvc"                                 # WLAN AutoConfig
         "WMPNetworkSvc"                            # Windows Media Player Network Sharing Service
-        "wscsvc"                                   # Windows Security Center Service
+        #"wscsvc"                                   # Windows Security Center Service
         "WSearch"                                 # Windows Search
         "XblAuthManager"                           # Xbox Live Auth Manager
         "XblGameSave"                              # Xbox Live Game Save Service
@@ -309,7 +307,6 @@ Function RegSetUser {
     #Use Autoplay for all media and devices
     Reg Add "$reglocation\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers" /T REG_DWORD /V "DisableAutoplay" /D 1 /F
     #Taskbar search, personal preference. 0 = no search, 1 = search icon, 2 = search bar
-    # Reg Add "$reglocation\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /T REG_DWORD /V "SearchboxTaskbarMode" /D 0 /F
     Reg Add "$reglocation\SOFTWARE\Microsoft\Windows\CurrentVersion\Search" /T REG_DWORD /V "SearchboxTaskbarMode" /D 2 /F
 
     #Allow search to use location if it's enabled
@@ -403,7 +400,7 @@ Function RegSetUser {
         Reg Add "$reglocation\System\GameConfigStore" /T REG_DWORD /V "GameDVR_Enabled" /D 0 /F
     }
 
-    #OneDrive settings - use -OneDrive switch to leave these on
+<#    #OneDrive settings - use -OneDrive switch to leave these on
     If ($OneDrive) {
     }	 Else {
         #Disable OneDrive startup run user settings
@@ -412,7 +409,7 @@ Function RegSetUser {
         If ($reglocation -ne "HKCU") {
             Reg Delete "$reglocation\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "OneDriveSetup" /F
         }
-    }
+    }#>
 
     #End user registry settings
 }
@@ -439,7 +436,7 @@ Function RegSetMachine {
     #Set Telemetry to off (switches to 1:basic for W10Pro and lower)
     Reg Add	"HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /T REG_DWORD /V "AllowTelemetry" /D 0 /F
     #Disable pre-release features and settings
-    #Reg Add "HKLM\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /T REG_DWORD /V "EnableConfigFlighting" /D 0 /F
+    Reg Add "HKLM\SOFTWARE\Policies\Microsoft\Windows\PreviewBuilds" /T REG_DWORD /V "EnableConfigFlighting" /D 0 /F
     #Do not show feedback notifications
     Reg Add	"HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /T REG_DWORD /V "DoNotShowFeedbackNotifications" /D 1 /F
 
@@ -477,7 +474,7 @@ Function RegSetMachine {
     Reg Add "HKLM\SOFTWARE\Microsoft\SQMClient\Windows" /T REG_DWORD /V "CEIPEnable" /D 0 /F
 
     #Turn off automatic download/install of store app updates
-    #Reg Add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsStore\WindowsUpdate" /T REG_DWORD /V "AutoDownload" /D 2 /F
+    Reg Add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsStore\WindowsUpdate" /T REG_DWORD /V "AutoDownload" /D 2 /F
 
     #Prevent using sign-in info to automatically finish setting up after an update
     Reg Add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /T REG_DWORD /V "ARSOUserConsent" /D 0 /F

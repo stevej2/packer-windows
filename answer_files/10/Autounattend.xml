@@ -245,13 +245,46 @@
                     <Order>14</Order>
                     <Description>Enable AutoLogon</Description>
                 </SynchronousCommand>
-                <!-- WITHOUT WINDOWS UPDATES -->
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>powershell -NoLogo -ExecutionPolicy RemoteSigned -File  a:\base_setup.ps1</CommandLine>
-                    <Description>Enable WinRM etc</Description>
-                    <Order>99</Order>
+                    <Description>Enable RDP, disable screensaver etc</Description>
+                    <Order>15</Order>
                 </SynchronousCommand>
-                <!-- END WITHOUT WINDOWS UPDATES -->
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>powershell -NoLogo -ExecutionPolicy RemoteSigned -File  a:\fix-network.ps1</CommandLine>
+                    <Description>Fix network Settings</Description>
+                    <Order>16</Order>
+                </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>powershell -NoLogo -ExecutionPolicy RemoteSigned -File  a:\enable-winrm.ps1</CommandLine>
+                    <Description>Enable WinRM</Description>
+                    <Order>17</Order>
+                </SynchronousCommand>
+               <!--<SynchronousCommand wcm:action="add">
+                    <CommandLine>powershell -NoLogo -ExecutionPolicy RemoteSigned -File  a:\add-remove-windows-features.ps1</CommandLine>
+                    <Description>add-remove-windows-features</Description>
+                    <Order>16</Order>
+                </SynchronousCommand>-->
+                <!--<SynchronousCommand wcm:action="add">
+                    <CommandLine>powershell -NoLogo -ExecutionPolicy RemoteSigned -File  a:\remove-onedrive.ps1</CommandLine>
+                    <Description>Remove OneDrive</Description>
+                    <Order>17</Order>
+                </SynchronousCommand>-->
+                <!--<SynchronousCommand wcm:action="add">
+                    <CommandLine>powershell -NoLogo -ExecutionPolicy RemoteSigned -File  a:\decrapifier.ps1</CommandLine>
+                    <Description>Remove unnecessary Windows settings</Description>
+                    <Order>18</Order>
+                </SynchronousCommand>-->
+                <!--<SynchronousCommand wcm:action="add">
+                    <CommandLine>powershell -NoLogo -ExecutionPolicy RemoteSigned -File  a:\openssh.ps1</CommandLine>
+                    <Description>Install OpenSSH</Description>
+                    <Order>20</Order>
+                </SynchronousCommand>-->
+                <!--<SynchronousCommand wcm:action="add">
+                    <CommandLine>powershell -NoLogo -ExecutionPolicy RemoteSigned -File  a:\cleanup.ps1</CommandLine>
+                    <Description>Clean temp files</Description>
+                    <Order>22</Order>
+                </SynchronousCommand>-->
                 <!-- WITH WINDOWS UPDATES -->
 <!--                <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\win-updates.ps1</CommandLine>
